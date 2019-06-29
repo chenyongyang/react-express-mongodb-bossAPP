@@ -31,7 +31,7 @@ export default class Register extends Component {
         this.props.history.replace('/register')
     }
 
-    render() {
+      render() {
         return (
             <div>
                 <NavBar>BOSS直聘</NavBar>
