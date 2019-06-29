@@ -1,0 +1,5 @@
+{
+    "scripts": {
+        "commit": "git add . && git commit -m 'pr' && git push origin master"
+    }
+}
