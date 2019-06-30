@@ -3,6 +3,7 @@ const router = express.Router();
 const md5 = require('blueimp-md5')
 
 const { UserModel } = require('../db/models')
+const filter = { password: 0 } // 查询时过滤出指定的属性
 
 /* GET home page. */
 router.get('/', function(req, res) {
@@ -40,12 +41,16 @@ router.post('/login', (req, res) => {
   // 获取请求参数
   const { username, password } = req.body
   
-  UserModel.findOne({ username }, (err, user) => {
+  UserModel.findOne({ username }, filter, (err, user) => {
     if (user) { // 如果返回有数据，说明存在
       if(user.password === md5(password)) {
+        // 登录成功，生成一个cookie
+        res.cookie('userid', user._id, {maxAge: 1000*60})
         res.send({
           code: 0,
-          msg: '登录成功'
+          data: {
+            user
+          }
         })
       }else {
         res.send({
