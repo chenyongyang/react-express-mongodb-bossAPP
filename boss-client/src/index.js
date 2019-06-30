@@ -5,6 +5,8 @@ import { Provider } from 'react-redux'
 
 import 'antd-mobile/dist/antd-mobile.css'; // 引入antd-mobile样式
 
+import './assets/css/index.less'
+
 import Register from './containers/register'
 import Login from './containers/login'
 import Main from './containers/main'

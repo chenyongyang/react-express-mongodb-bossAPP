@@ -18,19 +18,14 @@ export const register = (user) => {
     // 做表单的前台验证
     if(!username){
         return errorMsg('请输入用户名')
-    }
-    if (!password) {
-        return errorMsg('请输入密码')
-    }
-    if (!repassword) {
-        return errorMsg('请输入再次密码')
-    }
-    if (!type) {
-        return errorMsg('请勾选身份')
-    }
-    if (password !== repassword) {
+    } else if (password !== repassword) {
         return errorMsg('两次密码不一致')
+    } else if (!password) {
+        return errorMsg('请输入密码')
+    } else if (!type) {
+        return errorMsg('请勾选类型')
     }
+
     return async dispatch => {
         // 发送注册的异步ajax请求
         // reqRegister(user).then(response => {
@@ -38,6 +33,7 @@ export const register = (user) => {
         // })
         const response = await reqRegister({ username, password, type })
         const result = response.data
+        result.data = {...result.data, redirectTo: '/login'}
         if(result.code === 0) { // 成功
             // 分发成功的action
             dispatch(authSuccess(result.data))
@@ -50,10 +46,18 @@ export const register = (user) => {
 
 // 登录异步action
 export const login = (user) => {
+    const { username, password } = user
+    // 做表单的前台验证
+    if (!username) {
+        return errorMsg('请输入用户名')
+    } else if (!password) {
+        return errorMsg('请输入密码')
+    }
     return async dispatch => {
         // 发送登录的异步ajax请求
         const response = await reqLogin(user)
         const result = response.data
+        result.data = { ...result.data, redirectTo: '/main' }
         if (result.code === 0) { // 成功
             dispatch(authSuccess(result.data))
         } else { //失败

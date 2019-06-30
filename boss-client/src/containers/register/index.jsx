@@ -10,6 +10,8 @@ import {
     Button
 } from 'antd-mobile';
 
+import { Redirect } from 'react-router-dom'
+
 import Logo from '../../components/logo'
 import ListItem from 'antd-mobile/lib/list/ListItem';
 
@@ -36,18 +38,16 @@ class Register extends Component {
         })
     }
 
-    register = async () => {
+    register = () => {
         /* 
             前台往后台发送ajax请求，触发了跨域，直接用CORS解决即可
         */
-        const response = await this.props.register(this.state)
-        const result = response.data
-        console.log(result.code)
-        if(result.code === 0){ // 注册成功
-            this.props.history.replace('/login')
-        }else { // 失败
-            window.alert('用户已存在')
-        }
+        this.props.register(this.state)
+        /* 
+            组件用redux的action来派发动作去改变state
+            原本想要在组件中处理action的返回值，其实这种思路是不对的
+            action的任务是改变state，而前台即使
+        */
     }
 
     toLogin = () => {
@@ -56,12 +56,17 @@ class Register extends Component {
 
     render() {
         const { type } = this.state
+        const { msg, redirectTo } = this.props.user
+        if (redirectTo === '/login') {
+            return <Redirect to={ redirectTo } />
+        }
         return (
             <div>
                 <NavBar>BOSS直聘</NavBar>
                 <Logo/>
                 <WingBlank>
                     <List>
+                        { msg ? <div className="error-msg">{ msg }</div> : null }
                         <WhiteSpace/>
                         <InputItem placeholder="请输入用户名" onChange={val => {this.handleChange('username', val)}}>用户名:</InputItem>
                         <WhiteSpace />
@@ -92,6 +97,10 @@ class Register extends Component {
 }
 
 export default connect(
-    state => ({}),
+    state => {
+        return {
+            user: state.user
+        }
+    },
     { register }
 )(Register)

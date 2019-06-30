@@ -9,12 +9,16 @@ import {
     Button
 } from 'antd-mobile';
 
+import { Redirect } from 'react-router-dom'
+
 import Logo from '../../components/logo'
 
-// 导入后台提供的登录接口
-import { reqLogin } from '../../api'
+// 组件通过react-redux的connect来连接数据
+import { connect } from 'react-redux'
+// 导入登录action
+import { login } from '../../redux/actions'
 
-export default class Register extends Component {
+class Login extends Component {
     state = {
         username: '',
         password: ''
@@ -26,14 +30,8 @@ export default class Register extends Component {
         })
     }
 
-    login = async () => {
-        const response = await reqLogin(this.state)
-        const result = response.data
-        if(result.code === 0) { // 登录成功
-            this.props.history.replace('/main')
-        }else { // 失败
-            window.alert(result.msg)
-        }
+    login = () => {
+        this.props.login(this.state)
     }
 
     toRegister = () => {
@@ -41,12 +39,17 @@ export default class Register extends Component {
     }
 
       render() {
+        const { msg, redirectTo } = this.props.user
+        if ( redirectTo === '/main' ) {
+            return <Redirect to={redirectTo} />
+        }
         return (
             <div>
                 <NavBar>BOSS直聘</NavBar>
                 <Logo />
                 <WingBlank>
                     <List>
+                        { msg ? <div className="error-msg">{ msg }</div> : null }
                         <WhiteSpace />
                         <InputItem placeholder="请输入用户名" onChange={val => { this.handleChange('username', val) }}>用户名:</InputItem>
                         <WhiteSpace />
@@ -62,3 +65,8 @@ export default class Register extends Component {
         )
     }
 }
+
+export default connect(
+    state => ({user: state.user}),
+    { login }
+)(Login)
