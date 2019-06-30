@@ -1,5 +1,8 @@
 {
-    "scripts": {
-        "commit": "git add . && git commit -m 'pr' && git push origin master"
-    }
+  "scripts": {
+    "commit": "git add . && git commit -m 'pr' && git push origin master"
+  },
+  "dependencies": {
+    "axios": "^0.19.0"
+  }
 }

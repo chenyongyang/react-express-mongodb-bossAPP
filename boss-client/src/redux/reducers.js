@@ -1,15 +1,19 @@
 import { combineReducers } from 'redux'
 
-
-function a (state=1, action){
-    return state
+const initUser = {
+    username: '',
+    type: '',
+    msg: '' // 用来存储错误提示信息
 }
 
-function b (state=2, action){
-    return state
+function user(state=initUser, action) {
+    switch(action.type){
+        default:
+            return state
+    }
 }
+
 
 export default combineReducers({
-    a,
-    b
+    user
 })
