@@ -13,7 +13,16 @@ import {
 import Logo from '../../components/logo'
 import ListItem from 'antd-mobile/lib/list/ListItem';
 
-export default class Register extends Component {
+/* 
+    直接在组件中导入后台提供的数据接口，这种做法是错误的
+    因为数据接口是给redux用的，组件只能通过连接redux来对数据进行操作
+*/
+// 组件需要通过react-redux提供的connect组件来连接数据
+import { connect } from 'react-redux'
+// 同时如果组件想要对数据进行修改，那就要导入redux的action来操作
+import { register } from '../../redux/actions'
+
+class Register extends Component {
     state = {
         username: '',
         password: '',
@@ -27,8 +36,18 @@ export default class Register extends Component {
         })
     }
 
-    register = () => {
-        console.log(this.state)
+    register = async () => {
+        /* 
+            前台往后台发送ajax请求，触发了跨域，直接用CORS解决即可
+        */
+        const response = await this.props.register(this.state)
+        const result = response.data
+        console.log(result.code)
+        if(result.code === 0){ // 注册成功
+            this.props.history.replace('/login')
+        }else { // 失败
+            window.alert('用户已存在')
+        }
     }
 
     toLogin = () => {
@@ -71,3 +90,8 @@ export default class Register extends Component {
         )
     }
 }
+
+export default connect(
+    state => ({}),
+    { register }
+)(Register)

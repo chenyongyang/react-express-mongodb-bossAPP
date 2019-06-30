@@ -11,6 +11,9 @@ import {
 
 import Logo from '../../components/logo'
 
+// 导入后台提供的登录接口
+import { reqLogin } from '../../api'
+
 export default class Register extends Component {
     state = {
         username: '',
@@ -23,8 +26,14 @@ export default class Register extends Component {
         })
     }
 
-    login = () => {
-        console.log(this.state)
+    login = async () => {
+        const response = await reqLogin(this.state)
+        const result = response.data
+        if(result.code === 0) { // 登录成功
+            this.props.history.replace('/main')
+        }else { // 失败
+            window.alert(result.msg)
+        }
     }
 
     toRegister = () => {
