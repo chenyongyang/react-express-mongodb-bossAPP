@@ -8,6 +8,13 @@ const initUser = {
     redirectTo: '' // 用来指示组件的路由跳转
 }
 
+const initBoss = {
+    header: '',
+    post: '',
+    info: '',
+    company: '',
+    salary: ''
+}
 // 用新数据来覆盖旧数据的
 function user(state=initUser, action) {
     switch(action.type){
@@ -21,7 +28,15 @@ function user(state=initUser, action) {
     }
 }
 
+function boss (state=initBoss, action) {
+    switch(action.type){
+        default:
+            return state
+    }
+}
+
 
 export default combineReducers({
-    user
+    user,
+    boss
 })
