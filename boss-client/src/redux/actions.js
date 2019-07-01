@@ -33,7 +33,6 @@ export const register = (user) => {
         // })
         const response = await reqRegister({ username, password, type })
         const result = response.data
-        result.data = {...result.data, redirectTo: '/login'}
         if(result.code === 0) { // 成功
             // 分发成功的action
             dispatch(authSuccess(result.data))

@@ -40,7 +40,7 @@ class Login extends Component {
 
       render() {
         const { msg, redirectTo } = this.props.user
-        if ( redirectTo === '/main' ) {
+        if (redirectTo) {
             return <Redirect to={redirectTo} />
         }
         return (

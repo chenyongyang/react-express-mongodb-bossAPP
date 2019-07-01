@@ -67,4 +67,31 @@ router.post('/login', (req, res) => {
   })
 })
 
+// 更新数据库中对应的数据
+router.post('/update', (req, res) => {
+  // 从请求的cookie得到userid
+  const userid = req.cookies.userid
+  if(!userid){ // 不存在，说明没有登录，自然不能更新用户信息
+    return res.send({code: 1, msg: '请先登录'})
+  }
+  // 若存在，则根据userid来更新对应的user文档数据
+  const user = req.body // 这里是前台传过来要更新的信息
+  UserModel.findByIdAndUpdate({_id: userid}, user, (err, oldUser) => {
+    if (!oldUser) {
+      // 根据cookie的userid找不到对应的用户，说明这个cookie是无效的，应该通知浏览器删除这个cookies
+      // 实现：后台通过响应告诉浏览器删除
+      res.clearCookie('userid')
+      // 返回一个提示信息
+      res.send({code: 1, msg: '请先登录'})
+    } else {
+      // 需要前台返回更新后的用户信息
+      // 在node端，展开运算符不可用
+      // 准备一个返回的user数据对象
+      const { _id, uesrname, type } = oldUser
+      const data = Object.assign(user, { _id, uesrname, type })
+      res.send({code: 0, data})
+    }
+  })  
+})
+
 module.exports = router;

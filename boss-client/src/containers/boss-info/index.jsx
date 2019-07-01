@@ -28,7 +28,7 @@ class BossInfo extends Component {
     }
 
     handleSava = () => {
-        // this.props.boss = this.state
+        console.log(this.state)
     }
 
     setHeader = (header) => {

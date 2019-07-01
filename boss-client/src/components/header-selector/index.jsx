@@ -11,6 +11,10 @@ export default class HeaderSelector extends Component {
         setHeader: PropTypes.func.isRequired
     }
 
+    state = {
+        icon: null // 图片对象，默认没有值
+    }
+
     constructor(props) {
         super(props)
         // 准备需要显示的列表数据
@@ -23,13 +27,26 @@ export default class HeaderSelector extends Component {
         }
     }
 
+    handleClick = ({ text, icon }) => {
+        // 更新当前组件状态
+        this.setState({icon})
+        // 调用函数更新父组件状态
+        this.props.setHeader({text})
+    }
+
     render() {
-        const listHeader = '请选择头像'
+        const { icon } = this.state
+        const listHeader = !icon ? '请选择头像' : (
+            <div>
+                已选择头像：<img src={icon} alt='头像'/>
+            </div>
+        )
         return (
             <List renderHeader={() => listHeader}>
                 <Grid
                     data={this.headerList}
                     columnNum={5}
+                    onClick={this.handleClick}
                 />
             </List>
         )

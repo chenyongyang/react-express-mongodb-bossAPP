@@ -1,6 +1,8 @@
 import { combineReducers } from 'redux'
 import { AUTH_SUCCESS, ERROR_MSG } from './action-types'
 
+import { getRedirectTo } from '../utils'
+
 const initUser = {
     username: '',
     type: '',
@@ -20,7 +22,8 @@ function user(state=initUser, action) {
     switch(action.type){
         case AUTH_SUCCESS:
             // 授权成功后，指定路由到登录组件
-            return {...action.data}
+            const { type, header } = action.data
+            return { ...action.data, redirectTo: getRedirectTo(type, header)}
         case ERROR_MSG:
             return {...state, msg: action.data}
         default:
@@ -34,7 +37,6 @@ function boss (state=initBoss, action) {
             return state
     }
 }
-
 
 export default combineReducers({
     user,
