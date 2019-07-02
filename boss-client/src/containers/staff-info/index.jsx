@@ -12,6 +12,8 @@ import {
 
 import HeaderSelector from '../../components/header-selector'
 
+import { updateUser } from '../../redux/actions'
+
 class StaffInfo extends Component {
     state = {
         header: '',
@@ -51,8 +53,8 @@ class StaffInfo extends Component {
 export default connect(
     state => {
         return {
-            boss: state.boss
+            user: state.user
         }
     },
-    {}
+    { updateUser }
 )(StaffInfo)

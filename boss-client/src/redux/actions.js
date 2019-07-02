@@ -3,14 +3,23 @@
     异步action
     同步action
 */
-import { reqRegister, reqLogin } from '../api'
-import { AUTH_SUCCESS, ERROR_MSG } from '../redux/action-types'
+import { reqRegister, reqLogin, reqUpdateUser } from '../api'
+import {
+    AUTH_SUCCESS,
+    ERROR_MSG,
+    RECEIVE_USER,
+    RESET_USER
+} from '../redux/action-types'
 
 // 每一个action-types都对应一个同步action
 // 授权成功的同步action
 const authSuccess = (user) => ({type: AUTH_SUCCESS, data: user})
 // 错误提示的同步action
 const errorMsg = (msg) => ({ type: ERROR_MSG, data: msg })
+// 接收用户的同步action
+const receiveUser = (user) => ({type: RECEIVE_USER, data: user})
+// 重置用户的同步action
+const resetUser = (msg) => ({ type: RESET_USER, data: msg })
 
 // 注册异步action
 export const register = (user) => {
@@ -56,11 +65,24 @@ export const login = (user) => {
         // 发送登录的异步ajax请求
         const response = await reqLogin(user)
         const result = response.data
-        result.data = { ...result.data, redirectTo: '/main' }
         if (result.code === 0) { // 成功
             dispatch(authSuccess(result.data))
         } else { //失败
             dispatch(errorMsg(result.msg))
+        }
+    }
+}
+
+// 更新用户信息的异步action
+export const updateUser = (user) => {
+    // 这里可以先做一些前台的表单验证
+    return async dispatch => {
+        const response = await reqUpdateUser(user)
+        const result = response.data
+        if(result.code === 0) { // 更新成功
+            dispatch(receiveUser(result.data)) // 分发同步action
+        } else { // 更新失败
+            dispatch(resetUser(result.msg))
         }
     }
 }

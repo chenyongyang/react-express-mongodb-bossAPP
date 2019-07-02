@@ -31,7 +31,7 @@ export default class HeaderSelector extends Component {
         // 更新当前组件状态
         this.setState({icon})
         // 调用函数更新父组件状态
-        this.props.setHeader({text})
+        this.props.setHeader(text)
     }
 
     render() {

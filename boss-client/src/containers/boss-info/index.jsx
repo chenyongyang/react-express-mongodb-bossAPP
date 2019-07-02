@@ -10,7 +10,11 @@ import {
     Button
 } from 'antd-mobile'
 
+import { Redirect } from 'react-router-dom'
+
 import HeaderSelector from '../../components/header-selector'
+
+import { updateUser } from '../../redux/actions'
 
 class BossInfo extends Component {
     state = {
@@ -28,7 +32,7 @@ class BossInfo extends Component {
     }
 
     handleSava = () => {
-        console.log(this.state)
+        this.props.updateUser(this.state)
     }
 
     setHeader = (header) => {
@@ -38,6 +42,17 @@ class BossInfo extends Component {
     }
 
     render() {
+        /* 
+            如果信息完善好了，应该跳转到别的页面
+            这个页面跳转的实现思路：一切都以数据来驱动，信息完善完毕，说明header已经有值了
+            那就可以在页面渲染最开始先判断header是否有值，有的话就跳转
+        */
+       // 如果信息已经完善，自动重定向对应的主界面
+        const { type, header } = this.props.user
+        if(header) { // 说明信息已经完善
+            const path = type === 'staff' ? '/staff' : '/boss'
+            return <Redirect to={path} />
+        }
         return (
             <div>
                 <NavBar>老板信息完善</NavBar>
@@ -55,8 +70,8 @@ class BossInfo extends Component {
 export default connect(
     state => {
         return {
-            boss: state.boss
+            user: state.user
         }
     },
-    {}
+    { updateUser }
 )(BossInfo)

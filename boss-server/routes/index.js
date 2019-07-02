@@ -24,8 +24,8 @@ router.post('/register', (req, res) => {
     }else { // 保存到数据库中
       new UserModel({username, password: md5(password), type}).save((err, user) => {
         // 生成一个cookie，并交给浏览器保存
-        res.cookie('userid', user._id, {maxAge: 1000*60})
-        const data = { username, type, id: user._id } // 返回数据不包含密码，先做一层处理
+        res.cookie('userid', user._id, {maxAge: 1000*60*60*60})
+        const data = { username, type, _id: user._id } // 返回数据不包含密码，先做一层处理
         res.send({
           code: 0,
           data
@@ -45,12 +45,11 @@ router.post('/login', (req, res) => {
     if (user) { // 如果返回有数据，说明存在
       if(user.password === md5(password)) {
         // 登录成功，生成一个cookie
-        res.cookie('userid', user._id, {maxAge: 1000*60})
+        res.cookie('userid', user._id, {maxAge: 1000*60*60*60})
+        const data = user
         res.send({
           code: 0,
-          data: {
-            user
-          }
+          data
         })
       }else {
         res.send({
@@ -87,8 +86,8 @@ router.post('/update', (req, res) => {
       // 需要前台返回更新后的用户信息
       // 在node端，展开运算符不可用
       // 准备一个返回的user数据对象
-      const { _id, uesrname, type } = oldUser
-      const data = Object.assign(user, { _id, uesrname, type })
+      const { _id, username, type } = oldUser
+      const data = Object.assign(user, { _id, username, type })
       res.send({code: 0, data})
     }
   })  
