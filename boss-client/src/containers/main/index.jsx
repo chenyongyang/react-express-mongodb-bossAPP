@@ -29,3 +29,11 @@ class Main extends Component {
 export default connect(
     state => ({user: state.user})
 )(Main)
+
+/* 
+实现自动登录
+  - 如果cookie中有userid，发请求获取对应的user
+  - 如果cookie中没有userid，自动进入login界面
+已经登录，请求了根路径
+  - 根据type和header来计算出一个重定向的路由路径，并自动重定向
+*/
