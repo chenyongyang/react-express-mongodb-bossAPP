@@ -3,9 +3,7 @@ import {
     AUTH_SUCCESS, 
     ERROR_MSG,
     RECEIVE_USER,
-    RESET_USER,
-    GET_USER,
-    GET_NO_USER
+    RESET_USER
 } from './action-types'
 
 import { getRedirectTo } from '../utils'
